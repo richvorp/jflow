@@ -1,8 +1,10 @@
 # Jflow
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/jflow`. To experiment with that code, run `bin/console` for an interactive prompt.
+JFlow is a gem that aims to let you start SWF flow activity workers for JRuby.
 
-TODO: Delete this and the text above, and describe your gem
+The official framework uses Forking and thus not compatible with the JVM. This aims to give an alternative for Jruby.
+
+*For now this only works for Activities and not workflows*
 
 ## Installation
 
@@ -22,7 +24,49 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Create an Activity
+
+```ruby
+Class FooActivity
+  include JFlow::ActivityMixin
+
+  activity "policy_scan.run" do
+    {
+      domain: "alexandria-development",
+      default_task_list: {
+        name: "xray_activity_tasklist"
+      },
+      version: "1.4",
+      default_task_schedule_to_start_timeout: "600",
+      default_task_schedule_to_close_timeout: "600",
+      default_task_start_to_close_timeout: "600",
+      default_task_heartbeat_timeout: "600"
+    }
+  end
+
+  def run
+    "foo"
+  end
+end
+```
+
+### Launch the workers
+
+This gem provides you with a binary called jflow_worker. This binary requires a json configuration file.
+
+```bash
+jflow_worker -f worker.json
+```
+
+Example of a worker.json
+```json
+{
+  "domain": "alexandria-development",
+  "tasklist": "xray_activity_tasklist",
+  "number_of_workers": 100,
+  "activities_path": ["/home/pate/lookout/git/analysis_service/lib/flow/activities"]
+}
+```
 
 ## Development
 
