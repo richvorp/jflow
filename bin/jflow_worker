@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "jflow"
+require "slop"
+
+opts = Slop.parse do |o|
+  o.string '-f', '--file', 'worker configuration file'
+end
+
+configuration = JSON.parse(File.read(opts[:file]))
+
+configuration_validator = {
+  "number_of_workers" => "integer",
+  "domain"            => "string",
+  "tasklist"          => "string",
+  "activities_path"   => "array"
+}
+
+validator = HashValidator.validate(configuration, configuration_validator)
+raise "configuration is invalid! #{validator.errors}" unless validator.valid?
+
+JFlow.configure do |c|
+  c.load_paths = configuration["activities_path"]
+end
+
+JFlow.load_activities
+
+threads = []
+
+configuration["number_of_workers"].times do |i|
+  threads << Thread.new do
+    domain   = configuration["domain"]
+    tasklist = configuration["tasklist"]
+    JFlow::ActivityWorker.new(domain, tasklist)
+                         .start!
+  end
+end
+
+threads.each { |thr| thr.join }
+
+
