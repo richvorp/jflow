@@ -34,8 +34,13 @@ module JFlow
 
       begin
         JFlow.configuration.logger.debug "Started #{klass}#process with #{YAML.load(response.input)}"
-        result = klass.new.process(YAML.load(response.input)) || true
-        JFlow.configuration.logger.debug "Done #{klass}#process"
+        if response.activity_type.name.split('.').size > 1
+          method = response.activity_type.name.split('.').last
+        else
+          method = "process"
+        end
+        result = klass.new.send(method, YAML.load(response.input)) || true
+        JFlow.configuration.logger.debug "Done #{klass}##{method}"
         JFlow.configuration.swf_client.respond_activity_task_completed({
           task_token: response.task_token,
           result: result,
