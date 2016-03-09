@@ -61,10 +61,10 @@ jflow_worker -f worker.json
 Example of a worker.json
 ```json
 {
-  "domain": "alexandria-development",
-  "tasklist": "xray_activity_tasklist",
+  "domain": "foodomain",
+  "tasklist": "footasklist",
   "number_of_workers": 100,
-  "activities_path": ["/home/pate/lookout/git/analysis_service/lib/flow/activities"]
+  "activities_path": ["/home/pate/git/foobar/lib/flow/activities"]
 }
 ```
 
