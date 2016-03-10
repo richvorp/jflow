@@ -33,12 +33,12 @@ module JFlow
       raise "Could not find code to run for given activity" unless klass
 
       begin
-        JFlow.configuration.logger.debug "Started #{klass}#process with #{YAML.load(response.input)}"
         if response.activity_type.name.split('.').size > 1
           method = response.activity_type.name.split('.').last
         else
           method = "process"
         end
+        JFlow.configuration.logger.debug "Started #{klass}##{name} with #{YAML.load(response.input)}"
         result = klass.new.send(method, YAML.load(response.input)) || true
         JFlow.configuration.logger.debug "Done #{klass}##{method}"
         JFlow.configuration.swf_client.respond_activity_task_completed({
