@@ -38,7 +38,7 @@ module JFlow
         else
           method = "process"
         end
-        JFlow.configuration.logger.debug "Started #{klass}##{name} with #{YAML.load(response.input)}"
+        JFlow.configuration.logger.debug "Started #{klass}##{method} with #{YAML.load(response.input)}"
         result = klass.new.send(method, YAML.load(response.input)) || true
         JFlow.configuration.logger.debug "Done #{klass}##{method}"
         JFlow.configuration.swf_client.respond_activity_task_completed({
