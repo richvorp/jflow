@@ -26,13 +26,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "slop", "~> 4"
+  spec.add_runtime_dependency "slop", "~> 4"
+  spec.add_runtime_dependency "aws-sdk", "~> 2"
+  spec.add_runtime_dependency "hash_validator", "~> 0.4"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "simplecov"
-  spec.add_development_dependency "hash_validator"
-  spec.add_development_dependency "aws-sdk", "~> 2"
 
 end
