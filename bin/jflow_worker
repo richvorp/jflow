@@ -32,7 +32,7 @@ configuration["number_of_workers"].times do |i|
   threads << Thread.new do
     domain   = configuration["domain"]
     tasklist = configuration["tasklist"]
-    JFlow::ActivityWorker.new(domain, tasklist)
+    JFlow::Activity::Worker.new(domain, tasklist)
                          .start!
   end
 end

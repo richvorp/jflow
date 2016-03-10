@@ -1,13 +1,14 @@
-require "jflow/version"
-require "jflow/activity.rb"
-require "jflow/activity_mixin.rb"
-require "jflow/activity_task.rb"
-require "jflow/activity_worker.rb"
-require "jflow/configuration.rb"
 require "yaml"
 require "json"
 require "hash_validator"
 require 'aws-sdk'
+require "jflow/version"
+require "jflow/configuration.rb"
+require "jflow/activity/definition.rb"
+require "jflow/activity/mixin.rb"
+require "jflow/activity/task.rb"
+require "jflow/activity/map.rb"
+require "jflow/activity/worker.rb"
 
 module JFlow
   class << self
@@ -16,10 +17,6 @@ module JFlow
 
   def self.configuration
     @configuration ||= Configuration.new
-  end
-
-  def self.reset
-    @configuration = Configuration.new
   end
 
   def self.configure
