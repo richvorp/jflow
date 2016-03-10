@@ -28,7 +28,7 @@ module JFlow
     end
 
     def run!(input)
-      log "Started #{klass}##{method} with #{input)}"
+      log "Started #{klass}##{method} with #{input}"
       result = klass.new.send(method, input) || true
       log "Result is #{result.class} #{result}"
     end
