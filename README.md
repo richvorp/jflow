@@ -1,5 +1,7 @@
 # Jflow
 
+[![Build Status](https://travis-ci.org/djpate/jflow.svg?branch=master)](https://travis-ci.org/djpate/jflow)
+
 JFlow is a gem that aims to let you start SWF flow activity workers for JRuby.
 
 The official framework uses Forking and thus not compatible with the JVM. This aims to give an alternative for Jruby.
