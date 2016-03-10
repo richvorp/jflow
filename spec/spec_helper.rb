@@ -7,4 +7,5 @@ require 'jflow'
 
 JFlow.configure do |c|
   c.logger = Logger.new(nil)
+  c.swf_client = nil
 end
