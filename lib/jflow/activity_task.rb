@@ -6,7 +6,9 @@ module JFlow
     end
 
     def klass
-      $activity_map[name][version][:class] || raise "Could not find code to run for given activity"
+      ret = $activity_map[name][version][:class]
+      raise "Could not find code to run for given activity" unless ret
+      ret
     end
 
     def name
