@@ -22,6 +22,7 @@ raise "configuration is invalid! #{validator.errors}" unless validator.valid?
 
 JFlow.configure do |c|
   c.load_paths = configuration["activities_path"]
+  c.swf_client = Aws::SWF::Client.new
 end
 
 JFlow.load_activities
