@@ -30,7 +30,7 @@ Or install it yourself as:
 
 ```ruby
 Class FooActivity
-  include JFlow::ActivityMixin
+  include JFlow::Activity::Mixin
 
   activity "policy_scan.run" do
     {
@@ -78,5 +78,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/jflow.
+Bug reports and pull requests are welcome on GitHub at https://github.com/djpate/jflow.
 
