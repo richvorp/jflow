@@ -28,19 +28,8 @@ module JFlow
 
     def process_task(response)
       log "Got task #{response.task_token}"
-
-      klass = class_for_activity(response.activity_type)
-      raise "Could not find code to run for given activity" unless klass
-
       begin
-        if response.activity_type.name.split('.').size > 1
-          method = response.activity_type.name.split('.').last
-        else
-          method = "process"
-        end
-        JFlow.configuration.logger.debug "Started #{klass}##{method} with #{YAML.load(response.input)}"
-        result = klass.new.send(method, YAML.load(response.input)) || true
-        JFlow.configuration.logger.debug "Done #{klass}##{method}"
+        result = ActivityTask.new(response.activity_type).run!(YAML.load(response.input))
         JFlow.configuration.swf_client.respond_activity_task_completed({
           task_token: response.task_token,
           result: result,
@@ -71,10 +60,6 @@ module JFlow
         },
         identity: identity,
       }
-    end
-
-    def class_for_activity(activity_type)
-      $activity_map[activity_type.name][activity_type.version][:class]
     end
 
   end

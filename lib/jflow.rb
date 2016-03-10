@@ -1,6 +1,7 @@
 require "jflow/version"
 require "jflow/activity.rb"
 require "jflow/activity_mixin.rb"
+require "jflow/activity_task.rb"
 require "jflow/activity_worker.rb"
 require "jflow/configuration.rb"
 require "yaml"
