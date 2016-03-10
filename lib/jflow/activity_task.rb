@@ -31,7 +31,7 @@ module JFlow
 
     def run!(input)
       log "Started #{klass}##{method} with #{input}"
-      result = klass.new.send(method, input) || true
+      result = klass.new.send(method, input) || "done"
       log "Result is #{result.class} #{result}"
     end
 
