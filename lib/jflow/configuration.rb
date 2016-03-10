@@ -4,7 +4,7 @@ module JFlow
     attr_accessor :swf_client, :load_paths, :logger, :activity_map
 
     def initialize
-      @swf_client    = Aws::SWF::Client.new
+      @swf_client    = nil
       @load_paths    = []
       @logger        = Logger.new(STDOUT)
       @activity_map  = JFlow::Activity::Map.new
