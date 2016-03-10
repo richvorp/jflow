@@ -29,7 +29,7 @@ module JFlow
 
       def process_task(response)
         log "Got task #{response.task_token}"
-        task = ActivityTask.new(response)
+        task = JFlow::Activity::Task.new(response)
         begin
           task.run!
         rescue => exception
