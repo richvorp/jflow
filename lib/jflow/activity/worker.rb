@@ -33,7 +33,7 @@ module JFlow
         begin
           task.run!
         rescue => exception
-          task.failed!(e)
+          task.failed!(exception)
         end
       end
 
