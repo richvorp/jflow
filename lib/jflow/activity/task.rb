@@ -12,7 +12,6 @@ module JFlow
         YAML.load(task.input)
       end
 
-
       def name
         task.activity_type.name
       end
@@ -41,7 +40,7 @@ module JFlow
 
       def run!
         log "Started #{klass}##{method} with #{input}"
-        result = klass.new.send(method, input) || "done"
+        result = klass.new.send(method, *input) || "done"
         log "Result is #{result.class} #{result}"
         completed!(result)
       end
