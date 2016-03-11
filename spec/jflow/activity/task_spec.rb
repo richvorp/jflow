@@ -8,7 +8,7 @@ describe JFlow::Activity::Task do
   let(:mock_activity) do
     double(:activity,{
       :input => "--- foo\n",
-      :token => "tokenbar",
+      :task_token => "tokenbar",
       :activity_type => activity_type
     })
   end

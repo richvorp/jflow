@@ -22,7 +22,7 @@ module JFlow
       end
 
       def token
-        task.token
+        task.task_token
       end
 
       def klass
