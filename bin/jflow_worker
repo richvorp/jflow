@@ -38,6 +38,21 @@ configuration["number_of_workers"].times do |i|
   end
 end
 
-threads.each { |thr| thr.join }
+def shutdown(threads)
+  JFlow.configuration.logger.info "Sending kill signal to running threads. Please wait for current polling to finish"
+  threads.each do |thread|
+    thread["do_exit"] = true
+  end
+end
 
+Signal.trap("INT") {
+  shutdown(threads)
+}
+
+# Trap `Kill `
+Signal.trap("TERM") {
+  shutdown(threads)
+}
+
+threads.each { |thr| thr.join }
 

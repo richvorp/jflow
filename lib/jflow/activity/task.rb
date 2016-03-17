@@ -40,6 +40,7 @@ module JFlow
 
       def run!
         log "Started #{klass}##{method} with #{input}"
+
         result = klass.new.send(method, *input) || "done"
         log "Result is #{result.class} #{result}"
         completed!(result)
@@ -57,7 +58,7 @@ module JFlow
         swf_client.respond_activity_task_failed({
           task_token: token,
           reason: exception.message,
-          details: exception.backtrace.join("\n"),
+          details: exception.backtrace ? exception.backtrace.join("\n") : "no stacktrace",
         })
       end
 
