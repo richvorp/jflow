@@ -28,7 +28,7 @@ module JFlow
           else
             #The worker is shuting down, we don't want to start working on anything
             #so we fail the task and let the decider queue it up for retry later
-            task.failed!(exception, Exception.new("Worker is going down!"))
+            task.failed!(Exception.new("Worker is going down!"))
           end
         else
           log "Got no task"
