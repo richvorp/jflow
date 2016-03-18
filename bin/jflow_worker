@@ -40,9 +40,19 @@ end
 
 def shutdown(threads)
   JFlow.configuration.logger.info "Sending kill signal to running threads. Please wait for current polling to finish"
+  kill_threads = []
   threads.each do |thread|
     thread["do_exit"] = true
+    if thread["state"] == :working
+      kill_threads << Thread.new do
+        sleep 60
+        if thread.alive?
+          thread.raise("Workers are going down!")
+        end
+      end
+    end
   end
+  kill_threads.each { |thr| thr.join }
 end
 
 Signal.trap("INT") {

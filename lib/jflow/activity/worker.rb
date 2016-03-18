@@ -19,6 +19,7 @@ module JFlow
 
 
       def poll
+        Thread.current["state"] = :polling
         response = JFlow.configuration.swf_client.poll_for_activity_task(poll_params)
         if response.task_token
           log "Got task #{response.task_token}"
@@ -37,6 +38,7 @@ module JFlow
 
       def process(task)
         begin
+          Thread.current["state"] = :working
           task.run!
         rescue => exception
           task.failed!(exception)
