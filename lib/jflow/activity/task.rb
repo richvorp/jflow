@@ -25,11 +25,11 @@ module JFlow
       end
 
       def run_id
-        resp.workflow_execution.run_id
+        task.workflow_execution.run_id
       end
 
       def workflow_id
-        resp.workflow_execution.workflow_id
+        task.workflow_execution.workflow_id
       end
 
       def klass
