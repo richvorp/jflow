@@ -47,6 +47,7 @@ module JFlow
       end
 
       def completed!(result)
+        log "Task Completed"
         swf_client.respond_activity_task_completed({
           task_token: token,
           result: result,
@@ -55,6 +56,7 @@ module JFlow
 
 
       def failed!(exception)
+        log "Task Failed #{exception.message}"
         swf_client.respond_activity_task_failed({
           task_token: token,
           reason: exception.message,
