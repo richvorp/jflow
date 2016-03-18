@@ -24,6 +24,14 @@ module JFlow
         task.task_token
       end
 
+      def run_id
+        resp.workflow_execution.run_id
+      end
+
+      def workflow_id
+        resp.workflow_execution.workflow_id
+      end
+
       def klass
         @klass_value ||= JFlow.configuration.activity_map.klass_for(name,version)
         raise "Could not find code to run for given activity" unless @klass_value

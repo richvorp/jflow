@@ -22,8 +22,8 @@ module JFlow
         Thread.current.set_state(:polling)
         response = JFlow.configuration.swf_client.poll_for_activity_task(poll_params)
         if response.task_token
-          log "Got task #{response.task_token}"
           task = JFlow::Activity::Task.new(response)
+          log "Got task #{task.workflow_id}-#{task.run_id}"
           if should_be_working?
             process(task)
           else
