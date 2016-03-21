@@ -1,12 +1,11 @@
 #!/usr/bin/env ruby
-
-require "bundler/setup"
 require "jflow"
-require "slop"
+require "optparse"
 
-opts = Slop.parse do |o|
-  o.string '-f', '--file', 'worker configuration file'
-end
+opts = {}
+OptionParser.new do |opt|
+  opt.on('-f filename') { |o| opts[:file] = o }
+end.parse!
 
 raise "You need to specify a file!" unless opts[:file]
 

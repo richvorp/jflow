@@ -26,7 +26,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "slop", "~> 4"
   spec.add_runtime_dependency "aws-sdk", "~> 2"
   spec.add_runtime_dependency "hash_validator", "~> 0.4"
 
