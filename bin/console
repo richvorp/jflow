@@ -1,7 +1,4 @@
 #!/usr/bin/env ruby
-
-require "bundler/setup"
 require "jflow"
-
 require "irb"
 IRB.start
