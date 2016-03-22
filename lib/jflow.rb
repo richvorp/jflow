@@ -28,6 +28,7 @@ module JFlow
 
   def self.load_activities
     configuration.load_paths.each do |path|
+      path = File.join(ENV['APP_ROOT'], path) if ENV['APP_ROOT']
       Dir["#{path}/*.rb"].each do |file|
         configuration.logger.debug "found #{file}"
         require file
