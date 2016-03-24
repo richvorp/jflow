@@ -5,6 +5,7 @@ require 'aws-sdk'
 require 'logger'
 require "jflow/version"
 require "jflow/configuration.rb"
+require "jflow/domain.rb"
 require "jflow/activity/definition.rb"
 require "jflow/activity/mixin.rb"
 require "jflow/activity/task.rb"

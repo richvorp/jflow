@@ -2,6 +2,10 @@
 require "jflow"
 require "optparse"
 
+ENV['APP_ROOT'] = Dir.pwd
+
+puts ENV['APP_ROOT']
+
 opts = {:file => "worker.json"}
 OptionParser.new do |opt|
   opt.on('-f filename') { |o| opts[:file] = o }

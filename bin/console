@@ -1,4 +1,9 @@
 #!/usr/bin/env ruby
 require "jflow"
 require "irb"
+
+JFlow.configure do |c|
+  c.swf_client = Aws::SWF::Client.new
+end
+
 IRB.start

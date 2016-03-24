@@ -54,9 +54,13 @@ module JFlow
         @options[:version]
       end
 
+      def domain
+        JFlow::Domain.new(options[:domain])
+      end
+
       def registered?
         response = JFlow.configuration.swf_client.list_activity_types({
-          domain: options[:domain],
+          domain: domain.domain_name,
           name: name,
           registration_status: "REGISTERED"
         })
