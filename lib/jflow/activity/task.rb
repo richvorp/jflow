@@ -1,6 +1,11 @@
 module JFlow
   module Activity
     class Task
+      # From: http://docs.aws.amazon.com/amazonswf/latest/apireference/API_FailWorkflowExecutionDecisionAttributes.html
+      MAX_DETAILS_SIZE = 32768
+      MAX_REASON_SIZE = 256
+
+      TRUNCATION_IDENTIFIER = '[TRUNCATED]'
 
       attr_reader :task
 
@@ -65,14 +70,30 @@ module JFlow
 
       def failed!(exception)
         log "Task Failed #{exception.message}"
-        swf_client.respond_activity_task_failed({
+
+        reason = truncate(exception.message, MAX_REASON_SIZE)
+        details = if exception.backtrace
+                    truncate(exception.backtrace.join("\n"), MAX_DETAILS_SIZE)
+                  else
+                    "no stacktrace"
+                  end
+
+        swf_client.respond_activity_task_failed(
           task_token: token,
-          reason: exception.message,
-          details: exception.backtrace ? exception.backtrace.join("\n") : "no stacktrace",
-        })
+          reason: reason,
+          details: details
+        )
       end
 
       private
+
+      def truncate(message, max_length)
+        return message unless message.length > max_length
+
+        tail_room = max_length - TRUNCATION_IDENTIFIER.length
+
+        "#{message[0, tail_room]}#{TRUNCATION_IDENTIFIER}"
+      end
 
       def swf_client
         JFlow.configuration
