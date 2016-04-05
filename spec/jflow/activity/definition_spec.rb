@@ -1,10 +1,12 @@
 require 'spec_helper'
 
 describe JFlow::Activity::Definition do
+  let(:swf_client) { JFlow.configuration.swf_client = Aws::SWF::Client.new(stub_responses: true) }
 
   before(:each) do
-    allow(JFlow.configuration.swf_client).to receive(:register_activity_type)
-    allow(JFlow.configuration.swf_client).to receive(:list_activity_types).and_return activity_types
+    swf_client.stub_data(:list_domains)
+    swf_client.stub_data(:list_activity_types)
+    allow(swf_client).to receive(:register_activity_type)
     allow(JFlow.configuration.activity_map).to receive(:add_activity)
   end
 
@@ -16,7 +18,7 @@ describe JFlow::Activity::Definition do
     double(:activity_types, :type_infos => [])
   end
 
-  let(:klass){ "Foo"}
+  let(:klass) { "Foo" }
 
   let(:args) do
     {

@@ -104,15 +104,34 @@ describe JFlow::Activity::Task do
   end
 
   describe "#failed!" do
-    let(:exception){double(:exception,{ :message => "foo", :backtrace => ["b","a","r"]})}
-    it "should send the right signal to SWF" do
-      expect(JFlow.configuration.swf_client).to receive(:respond_activity_task_failed)
-                                            .with({
-                                              :task_token => task.token,
-                                              :reason => "foo",
-                                              :details => "b\na\nr"
-                                            })
-      task.failed!(exception)
+    context "short exception strings" do
+      let(:exception){double(:exception,{ :message => "foo", :backtrace => ["b","a","r"]})}
+      it "should send the right signal to SWF" do
+        expect(JFlow.configuration.swf_client).to receive(:respond_activity_task_failed)
+                                              .with({
+                                                :task_token => task.token,
+                                                :reason => "foo",
+                                                :details => "b\na\nr"
+                                              })
+        task.failed!(exception)
+      end
+    end
+
+    context "exception messages that are too long" do
+      let(:message) { "X" * 257 }
+      let(:backtrace) { ["X" * 32769] }
+      let(:exception) { double(:exception,{ :message => message, :backtrace => backtrace } ) }
+      
+      after { task.failed!(exception) }
+
+      it "truncates and adds the truncate message" do
+        expect(JFlow.configuration.swf_client).to receive(:respond_activity_task_failed)
+          .with(
+            :task_token => task.token,
+            :reason => "#{'X' * 245}[TRUNCATED]",
+            :details => "#{'X' * 32757}[TRUNCATED]"
+          )
+      end
     end
   end
 
