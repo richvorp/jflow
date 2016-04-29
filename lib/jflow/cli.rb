@@ -8,7 +8,7 @@ module JFlow
       "activities_path"   => "array"
     }
 
-    attr_reader :number_of_workers, :domain, :tasklist, :worker_threads, :activities_path
+    attr_reader :number_of_workers, :domain, :tasklist, :worker_threads, :activities_path, :enable_stats
 
     def initialize(options)
       validate_options(options)
@@ -16,6 +16,7 @@ module JFlow
       @domain             = options["domain"]
       @tasklist           = options["tasklist"]
       @activities_path    = options["activities_path"]
+      @enable_stats       = options["enable_stats"] || true
       @worker_threads     = []
       setup
     end
@@ -24,6 +25,7 @@ module JFlow
       number_of_workers.times do
         worker_threads << worker_thread
       end
+      worker_threads << stats_thread if enable_stats
       worker_threads.each(&:join)
     end
 
@@ -58,8 +60,21 @@ module JFlow
       JFlow.configure do |c|
         c.load_paths = activities_path
         c.swf_client = Aws::SWF::Client.new
+        c.cloudwatch_client = Aws::CloudWatch::Client.new
       end
       JFlow.load_activities
+    end
+
+    def stats_thread
+      JFlow::WorkerThread.new do
+        Thread.current.set_state(:polling)
+        stats = JFlow::Stats.new(@domain, @tasklist)
+        loop do
+          break if Thread.current.marked_for_shutdown?
+          stats.tick
+          sleep 30
+        end
+      end
     end
 
     def kill_thread(thread)
