@@ -111,7 +111,7 @@ describe JFlow::Activity::Task do
                                               .with({
                                                 :task_token => task.token,
                                                 :reason => "foo",
-                                                :details => "b\na\nr"
+                                                :details => "--- !ruby/object:RSpec::Mocks::Double\n__expired: false\nname: :exception\n---\n- b\n- a\n- r\n"
                                               })
         task.failed!(exception)
       end
@@ -121,7 +121,7 @@ describe JFlow::Activity::Task do
       let(:message) { "X" * 257 }
       let(:backtrace) { ["X" * 32769] }
       let(:exception) { double(:exception,{ :message => message, :backtrace => backtrace } ) }
-      
+
       after { task.failed!(exception) }
 
       it "truncates and adds the truncate message" do
@@ -129,7 +129,7 @@ describe JFlow::Activity::Task do
           .with(
             :task_token => task.token,
             :reason => "#{'X' * 245}[TRUNCATED]",
-            :details => "#{'X' * 32757}[TRUNCATED]"
+            :details => "--- !ruby/object:RSpec::Mocks::Double\n__expired: false\nname: :exception\n---\n- #{'X' * 32679}[TRUNCATED]"
           )
       end
     end

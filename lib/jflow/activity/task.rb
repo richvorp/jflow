@@ -72,16 +72,11 @@ module JFlow
         log "Task Failed #{exception.message}"
 
         reason = truncate(exception.message, MAX_REASON_SIZE)
-        details = if exception.backtrace
-                    truncate(exception.backtrace.join("\n"), MAX_DETAILS_SIZE)
-                  else
-                    "no stacktrace"
-                  end
 
         swf_client.respond_activity_task_failed(
           task_token: token,
           reason: reason,
-          details: details
+          details: truncate(YAML.dump_stream(exception, exception.backtrace), MAX_DETAILS_SIZE)
         )
       end
 
