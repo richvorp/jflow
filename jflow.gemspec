@@ -6,8 +6,8 @@ require 'jflow/version'
 Gem::Specification.new do |spec|
   spec.name          = "jflow"
   spec.version       = JFlow::VERSION
-  spec.authors       = ["Christophe Verbinnen"]
-  spec.email         = ["christophe.verbinnen@lookout.com"]
+  spec.authors       = ["Christophe Verbinnen","Richard Vorp"]
+  spec.email         = ["christophe.verbinnen@lookout.com","richard.vorp@lookout.com"]
 
   spec.summary       = %q{SWF Flow framework for jRuby}
   spec.description   = %q{you know, for flow}
@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "aws-sdk", "~> 2"
   spec.add_runtime_dependency "hash_validator", "~> 0.4"
+  spec.add_runtime_dependency "jflow_exceptions", "~> 0.1.1"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"

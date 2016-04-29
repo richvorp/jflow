@@ -3,6 +3,7 @@ require "json"
 require "hash_validator"
 require 'aws-sdk'
 require 'logger'
+require 'jflow_exceptions'
 require "jflow/version"
 require "jflow/configuration.rb"
 require "jflow/domain.rb"
