@@ -44,14 +44,12 @@ module JFlow
     # Shutting down workers will take a exactly 60 secs in all cases.
     def shutdown_workers
       log "Sending kill signal to running threads. Please wait for current polling to finish"
-      kill_threads = []
       worker_threads.each do |thread|
         thread.mark_for_shutdown
-        if thread.currently_working?
-            kill_threads << kill_thread(thread)
+        if thread.currently_working? && thread.alive?
+          thread.raise("Workers are going down!")
         end
       end
-      kill_threads.each(&:join)
     end
 
     private
@@ -73,15 +71,6 @@ module JFlow
           break if Thread.current.marked_for_shutdown?
           stats.tick
           sleep 30
-        end
-      end
-    end
-
-    def kill_thread(thread)
-      Thread.new do
-        sleep 60
-        if thread.alive?
-          thread.raise("Workers are going down!")
         end
       end
     end
