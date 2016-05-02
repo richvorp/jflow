@@ -6,7 +6,7 @@ module JFlow
         :exceptions_to_exclude => []
       }
 
-      REGISTRATION_OPTIONS = [:version, :domain, :name, :default_task_list]
+      JFLOW_OPTIONS = [:exceptions_to_exclude]
 
       OPTIONS_VALIDATOR = {
         :version => "string",
@@ -83,8 +83,8 @@ module JFlow
       private
 
       def registration_options
-        REGISTRATION_OPTIONS.each_with_object({}) do |key, hash|
-          hash[key] = @options[key]
+        @options.reject do |key,value|
+          JFLOW_OPTIONS.include?(key)
         end
       end
 
