@@ -13,6 +13,7 @@ require "jflow/activity/task.rb"
 require "jflow/activity/map.rb"
 require "jflow/activity/worker.rb"
 require "jflow/worker_thread.rb"
+require "jflow/termination_protector.rb"
 require "jflow/stats.rb"
 require "jflow/cli.rb"
 

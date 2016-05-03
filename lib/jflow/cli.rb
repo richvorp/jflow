@@ -25,8 +25,7 @@ module JFlow
       number_of_workers.times do
         worker_threads << worker_thread
       end
-      worker_threads << stats_thread if enable_stats
-      worker_threads << termination_protection_thread if is_an_instance?
+      worker_threads << maintenance_thread if enable_stats || is_ec2_instance?
       worker_threads.each(&:join)
     end
 
@@ -64,41 +63,32 @@ module JFlow
       JFlow.load_activities
     end
 
-    def stats_thread
+    def maintenance_thread
       JFlow::WorkerThread.new do
         Thread.current.set_state(:polling)
         stats = JFlow::Stats.new(@domain, @tasklist)
+        protector = JFlow::TerminationProtector.new
         loop do
           break if Thread.current.marked_for_shutdown?
-          stats.tick
+          JFlow.configuration.logger.debug "Should protect?: #{should_protect?}"
+          protector.set_protection(should_protect?) if is_ec2_instance?
+          stats.tick if enable_stats
           sleep 30
         end
       end
+    end
+
+    # returns true if any thread if working on someting
+    def should_protect?
+      worker_threads.each do |thread|
+        return true if thread.currently_working?
+      end
+      return false
     end
 
     # This should exist on all EC2 instances
-    def is_an_instance?
-      File.exist?('/sys/hypervisor/uuid')
-    end
-
-    def termination_protection_thread
-      JFlow::WorkerThread.new do
-        Thread.current.set_state(:polling)
-        termination_protector = JFlow::TerminationProtector.new
-        loop do
-          break if Thread.current.marked_for_shutdown?
-          protection_status = false
-          worker_threads.each do |thread|
-            if thread.currently_working?
-              JFlow.configuration.logger.debug "Found a working thread, setting protection status to true"
-              protection_status = true
-              break
-            end
-          end
-          termination_protector.set_termination_protection(protection_status)
-          sleep 30
-        end
-      end
+    def is_ec2_instance?
+      @ec2_instance ||= File.exist?('/sys/hypervisor/uuid')
     end
 
     def log(str)
