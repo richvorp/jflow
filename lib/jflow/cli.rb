@@ -70,7 +70,6 @@ module JFlow
         protector = JFlow::TerminationProtector.new
         loop do
           break if Thread.current.marked_for_shutdown?
-          JFlow.configuration.logger.debug "Should protect?: #{should_protect?}"
           protector.set_protection(should_protect?) if is_ec2_instance?
           stats.tick if enable_stats
           sleep 30
