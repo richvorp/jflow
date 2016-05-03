@@ -73,6 +73,12 @@ describe JFlow::Activity::Definition do
                                                 :default_task_list=>{:name=>"tasklist"}
                                               })
     end
+
+    it "should forward unknown commands to SWF" do
+      JFlow::Activity::Definition.new(klass, args.merge(:random_key => 'random value'))
+      expect(JFlow.configuration.swf_client).to have_received(:register_activity_type)
+                                              .with(args.merge(:random_key => 'random value'))
+    end
   end
 
 end
