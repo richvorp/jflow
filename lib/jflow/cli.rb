@@ -26,6 +26,7 @@ module JFlow
         worker_threads << worker_thread
       end
       worker_threads << stats_thread if enable_stats
+      worker_threads << termination_protection_thread if is_an_instance?
       worker_threads.each(&:join)
     end
 
@@ -70,6 +71,31 @@ module JFlow
         loop do
           break if Thread.current.marked_for_shutdown?
           stats.tick
+          sleep 30
+        end
+      end
+    end
+
+    # This should exist on all EC2 instances
+    def is_an_instance?
+      File.exist?('/sys/hypervisor/uuid')
+    end
+
+    def termination_protection_thread
+      JFlow::WorkerThread.new do
+        Thread.current.set_state(:polling)
+        termination_protector = JFlow::TerminationProtector.new
+        loop do
+          break if Thread.current.marked_for_shutdown?
+          protection_status = false
+          worker_threads.each do |thread|
+            if thread.currently_working?
+              JFlow.configuration.logger.debug "Found a working thread, setting protection status to true"
+              protection_status = true
+              break
+            end
+          end
+          termination_protector.set_termination_protection(protection_status)
           sleep 30
         end
       end
