@@ -12,7 +12,11 @@ module JFlow
       def start!
         while should_be_working?
           log "Polling for task on #{domain} - #{tasklist}"
-          poll
+          begin
+            poll
+          rescue => e
+            JFlow.configuration.logger.error e.message
+          end
         end
         log "Thread is marked as exiting, stopping the poll"
       end
