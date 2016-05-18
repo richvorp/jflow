@@ -5,6 +5,10 @@ describe JFlow::Activity::Task do
   class FooActivity
   end
 
+  class MockErrorService
+    def self.capture_exception(e); end
+  end
+
   class FooError < StandardError; end
 
   let(:mock_activity) do
@@ -170,6 +174,36 @@ describe JFlow::Activity::Task do
               :details => "--- #{'X' * 32753}[TRUNCATED]"
             )
         end
+      end
+    end
+  end
+
+  describe "#handle_exception" do
+    let(:exception) { double(:exception, { :message => 'message', :backtrace => 'backtrace' } ) }
+
+    context 'error handlers configured' do
+      before do
+        JFlow.configuration.error_handlers <<
+              Proc.new {|e| MockErrorService.capture_exception(e) }
+      end
+
+      it 'calls error handler' do
+        expect(MockErrorService).to receive(:capture_exception).with(exception)
+
+        task.handle_exception(exception)
+      end
+    end
+
+    context 'error handler fails' do
+      before do
+        JFlow.configuration.error_handlers <<
+              Proc.new {|e| fail('Handler error') }
+      end
+
+      it 'it logs error' do
+        expect(JFlow.configuration.logger).to receive(:error).twice
+
+        task.handle_exception(exception)
       end
     end
   end

@@ -45,6 +45,7 @@ module JFlow
           Thread.current.set_state(:working)
           task.run!
         rescue => exception
+          task.handle_exception(exception)
           task.failed!(exception)
         end
       end
