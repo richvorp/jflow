@@ -26,6 +26,15 @@ describe JFlow::Activity::Worker do
     it "should call failed on exceptions" do
       error = RuntimeError.new("foo")
       expect(task).to receive(:run!).and_raise error
+      expect(task).to receive(:handle_exception).with error
+      expect(task).to receive(:failed!).with error
+      worker.process(task)
+    end
+
+    it "should execute error handlers on exceptions" do
+      error = RuntimeError.new("foo")
+      expect(task).to receive(:run!).and_raise error
+      expect(task).to receive(:handle_exception).with error
       expect(task).to receive(:failed!).with error
       worker.process(task)
     end

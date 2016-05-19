@@ -71,6 +71,14 @@ Example of a worker.json
 }
 ```
 
+### Error Handlers
+
+You can attach your own error handler for error logging or exception handling by providing a service that responds to `call(exception)`. If you are using Sentry, you can add Raven as error handler:
+
+```ruby
+JFlow.configuration.error_handlers << Proc.new { |e| Raven.capture_exception(e) }
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
