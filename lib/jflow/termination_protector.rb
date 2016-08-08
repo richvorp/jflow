@@ -32,6 +32,10 @@ module JFlow
     end
 
     def set_protection(protect_status)
+      @previous_protect_status ||= false
+      return if @previous_protect_status == protect_status
+      @previous_protect_status = protect_status
+
       JFlow.configuration.logger.debug "Setting termination protection status to #{protect_status} for instance #{instance_id} in region #{region}"
       begin
         asg_client = Aws::AutoScaling::Client.new(region: region, credentials: Aws::InstanceProfileCredentials.new)
@@ -42,8 +46,8 @@ module JFlow
         })
       rescue => e
         JFlow.configuration.logger.debug "Something went wrong setting termination proection: #{e.inspect}"
+        JFlow.handle_exception(e)
       end
     end
-
   end
 end
