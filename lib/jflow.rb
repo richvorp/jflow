@@ -50,4 +50,8 @@ module JFlow
       end
     end
   end
+
+  def self.log_error(str)
+    JFlow.configuration.logger.error "[#{Thread.current.object_id}] #{str}"
+  end
 end
